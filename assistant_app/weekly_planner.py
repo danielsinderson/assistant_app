@@ -15,8 +15,10 @@ with open(data_dir + "weekly_planner_data.yaml", 'r') as planner_file:
 notebook_path: str = planner_data['notebook_path']
 
 
-def format_appointments_and_events(data: dict) -> str:
+def format_appointments_and_events() -> str:
+    appointments: dict = planner_data['appointments']
     today = datetime.today()
+
 
 
 def format_maintenance() -> str:
