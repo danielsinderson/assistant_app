@@ -16,8 +16,7 @@ with open(data_dir + "weekly_planner_data.yaml", 'r') as planner_file:
 notebook_path: str = planner_data['notebook_path']
 
 
-def format_appointments_and_events() -> str:
-    def upcoming(d: str) -> bool:
+def upcoming(d: str, threshold: int) -> bool:
         today = date.today()
         
         month = int(d.split('-')[0])
@@ -26,21 +25,30 @@ def format_appointments_and_events() -> str:
         event_date = date(year, month, day)
         
         difference = event_date - today
-        # print(month, day, year, difference)
-        if 0 <= difference.days <= 14:
+        if 0 <= difference.days <= threshold:
             return True
         else:
             return False
+
+
+def find_upcoming_dates(category: str) -> list[str]:
+    thresholds = {"appointments": 10, "tasks": 10, "events": 20}
+    dates: dict = planner_data[category]
+    upcoming_dates = [f"{thing}: {date_time}" for thing, date_time in dates.items() \
+                      if upcoming(date_time.split()[0], thresholds[category])]
     
-    appointments: dict = planner_data['appointments']
-    upcoming_appointments = [f"{key}: {appointments[key]}" for key in appointments.keys() if upcoming(appointments[key].split()[0])]
+    return upcoming_dates
 
-    events: dict = planner_data['events']
-    upcoming_events = [f"{key}: {events[key]}" for key in events.keys() if upcoming(events[key])]
 
-    output = f"## Calendar\n" + "**Appointments**\n" + "\n".join(upcoming_appointments) + "\n\n**Events**\n" + "\n".join(upcoming_events)
-    return output
+def format_calendar() -> str:
+    upcoming_appointments = find_upcoming_dates("appointments")
+    upcoming_tasks = find_upcoming_dates("tasks")
+    upcoming_events = find_upcoming_dates("events")
 
+    calendar = f"## Calendar\n" + "**Appointments**\n" + "\n".join(upcoming_appointments) 
+    calendar += "\n\n**Tasks**\n" + "\n".join(upcoming_tasks)
+    calendar += "\n\n**Events**\n" + "\n".join(upcoming_events)
+    return calendar
 
 
 def format_maintenance() -> str:
@@ -54,14 +62,15 @@ def format_maintenance() -> str:
     creative_exercises: str = section_to_string('creative exercise')
     social_interaction: str = section_to_string('social interaction')
 
-    output: str = "## Maintenance\n\n" + chores + physical_exercises + creative_exercises + social_interaction
+    output: str = "## Maintenance\n\n" 
+    output += (chores + physical_exercises + creative_exercises + social_interaction)
     return output
 
 
 
 def create_note() -> None:
     maintenance: str = format_maintenance()
-    calendar: str = format_appointments_and_events()
+    calendar: str = format_calendar()
     output: str = "\n" + calendar + "\n" + maintenance
     #print(output)
     with open(notebook_path + "Weekly Planner.md", 'w') as planner_note_file:
