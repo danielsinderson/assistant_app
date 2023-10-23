@@ -74,7 +74,7 @@ def create_note() -> None:
     output: str = "\n" + calendar + "\n" + maintenance
     #print(output)
     with open(notebook_path + "Weekly Planner.md", 'w') as planner_note_file:
-        planner_note_file.write(f"Weekly Planner for the week of {date.today()}:\n\n" + output)
+        planner_note_file.write(f"Weekly Planner for the week of {date.today()}:" + output)
 
 
 def main():
