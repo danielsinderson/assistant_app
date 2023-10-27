@@ -45,9 +45,9 @@ def format_calendar() -> str:
     upcoming_tasks = find_upcoming_dates("tasks")
     upcoming_events = find_upcoming_dates("events")
 
-    calendar = f"## Calendar\n" + "**Appointments**\n" + "\n".join(upcoming_appointments) 
-    calendar += "\n\n**Tasks**\n" + "\n".join(upcoming_tasks)
-    calendar += "\n\n**Events**\n" + "\n".join(upcoming_events)
+    calendar = f"## Calendar\n" + "**Appointments**\n- [ ] " + "\n- [ ] ".join(upcoming_appointments) 
+    calendar += "\n\n**Tasks**\n- [ ] " + "\n- [ ] ".join(upcoming_tasks)
+    calendar += "\n\n**Events**\n- [ ] " + "\n- [ ] ".join(upcoming_events)
     return calendar
 
 
