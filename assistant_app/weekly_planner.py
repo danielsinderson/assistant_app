@@ -32,7 +32,7 @@ def upcoming(d: str, threshold: int) -> bool:
 
 
 def find_upcoming_dates(category: str) -> list[str]:
-    thresholds = {"appointments": 10, "tasks": 10, "events": 20}
+    thresholds = {"appointments": 10, "events": 20}
     dates: dict = planner_data[category]
     upcoming_dates = [f"{thing}: {date_time}" for thing, date_time in dates.items() \
                       if upcoming(date_time.split()[0], thresholds[category])]
@@ -42,13 +42,11 @@ def find_upcoming_dates(category: str) -> list[str]:
 
 def format_calendar() -> str:
     upcoming_appointments = find_upcoming_dates("appointments")
-    upcoming_tasks = find_upcoming_dates("tasks")
     upcoming_events = find_upcoming_dates("events")
 
-    calendar = f"## Calendar\n" + "**Appointments**\n- [ ] " + "\n- [ ] ".join(upcoming_appointments) 
-    calendar += "\n\n**Tasks**\n- [ ] " + "\n- [ ] ".join(upcoming_tasks)
+    calendar = f"\n**Appointments**\n- [ ] " + "\n- [ ] ".join(upcoming_appointments) 
     calendar += "\n\n**Events**\n- [ ] " + "\n- [ ] ".join(upcoming_events)
-    return calendar
+    return calendar + "\n"
 
 
 def format_maintenance() -> str:
@@ -62,8 +60,7 @@ def format_maintenance() -> str:
     creative_exercises: str = section_to_string('creative exercise')
     social_interaction: str = section_to_string('social interaction')
 
-    output: str = "## Maintenance\n\n" 
-    output += (chores + physical_exercises + creative_exercises + social_interaction)
+    output: str = chores + physical_exercises + creative_exercises + social_interaction
     return output
 
 
